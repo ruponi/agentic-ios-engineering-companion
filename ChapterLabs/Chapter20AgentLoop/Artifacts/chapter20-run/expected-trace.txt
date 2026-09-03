@@ -1,0 +1,18 @@
+=== SUCCESS ===
+OBSERVE request=Find my note about Kyoto and prepare a short packing brief.
+DECIDE turn=1 proposal=tool name=searchNotes call=call-1
+VERIFY accepted-tool call=call-1 query=Kyoto
+ACT searchNotes call=call-1 results=1
+OBSERVE context tool-results=1 retained-messages=3
+DECIDE turn=2 proposal=final sources=1
+VERIFY final sources-observed=true items=3
+STOP succeeded turns=2
+=== REPEATED CALL ===
+OBSERVE request=Find my note about Kyoto and prepare a short packing brief.
+DECIDE turn=1 proposal=tool name=searchNotes call=call-1
+VERIFY accepted-tool call=call-1 query=Kyoto
+ACT searchNotes call=call-1 results=1
+OBSERVE context tool-results=1 retained-messages=3
+DECIDE turn=2 proposal=tool name=searchNotes call=call-2
+VERIFY rejected=repeatedToolCall
+STOP failed reason=repeatedToolCall

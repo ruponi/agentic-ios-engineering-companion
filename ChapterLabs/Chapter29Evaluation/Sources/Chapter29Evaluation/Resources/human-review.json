@@ -1,0 +1,7 @@
+[
+  {"candidateID":"grounded-detail","reviewerAScore":4,"reviewerBScore":4,"judgePass":true},
+  {"candidateID":"fallback-brief","reviewerAScore":3,"reviewerBScore":3,"judgePass":true},
+  {"candidateID":"concise-brief","reviewerAScore":3,"reviewerBScore":3,"judgePass":true},
+  {"candidateID":"thin-brief","reviewerAScore":2,"reviewerBScore":3,"judgePass":true},
+  {"candidateID":"useless-brief","reviewerAScore":1,"reviewerBScore":1,"judgePass":false}
+]

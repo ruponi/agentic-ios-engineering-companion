@@ -1,0 +1,51 @@
+#!/bin/sh
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+DERIVED=${TMPDIR:-/tmp}/fieldnotes-companion-test-derived
+
+if [ -n "${FIELDNOTES_DESTINATION:-}" ]; then
+    DESTINATION=$FIELDNOTES_DESTINATION
+else
+    DEVICE_ID=$(xcrun simctl list devices booted | awk -F '[()]' '/iPhone/ { print $2; exit }')
+    if [ -z "$DEVICE_ID" ]; then
+        echo "No booted iPhone Simulator found." >&2
+        echo "Boot one in Xcode or set FIELDNOTES_DESTINATION explicitly." >&2
+        exit 64
+    fi
+    DESTINATION="platform=iOS Simulator,id=$DEVICE_ID"
+fi
+
+xcodebuild \
+    -project "$ROOT/FieldNotes/FieldNotes.xcodeproj" \
+    -scheme FieldNotes \
+    -destination "$DESTINATION" \
+    -derivedDataPath "$DERIVED" \
+    CODE_SIGNING_ALLOWED=NO \
+    test
+
+"$ROOT/ChapterLabs/Chapter20AgentLoop/Scripts/verify"
+"$ROOT/ChapterLabs/Chapter23SecureBackend/Scripts/verify"
+
+CHAPTER29_SCRATCH=${TMPDIR:-/tmp}/fieldnotes-chapter29-build
+cd "$ROOT/ChapterLabs/Chapter29Evaluation"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter29-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter29-swift-cache \
+    swift test --scratch-path "$CHAPTER29_SCRATCH"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter29-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter29-swift-cache \
+    swift run --scratch-path "$CHAPTER29_SCRATCH" EvaluationRunner
+
+CHAPTER30_SCRATCH=${TMPDIR:-/tmp}/fieldnotes-chapter30-build
+cd "$ROOT/ChapterLabs/Chapter30Observability"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter30-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter30-swift-cache \
+    swift test --scratch-path "$CHAPTER30_SCRATCH"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter30-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter30-swift-cache \
+    swift run --scratch-path "$CHAPTER30_SCRATCH" ObservabilityRunner
+
+CHAPTER33_SCRATCH=${TMPDIR:-/tmp}/fieldnotes-chapter33-build
+cd "$ROOT/ChapterLabs/Chapter33MultiAgent"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter33-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter33-swift-cache \
+    swift test --scratch-path "$CHAPTER33_SCRATCH"
+env CLANG_MODULE_CACHE_PATH=/tmp/chapter33-clang-cache SWIFT_MODULE_CACHE_PATH=/tmp/chapter33-swift-cache \
+    swift run --scratch-path "$CHAPTER33_SCRATCH" MultiAgentTrace
+
+echo "companion verify: PASS"

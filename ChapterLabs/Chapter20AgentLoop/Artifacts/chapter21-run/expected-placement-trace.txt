@@ -1,0 +1,16 @@
+=== AVAILABLE ===
+placement=on-device
+title=Kyoto packing brief
+items=3
+=== INELIGIBLE ===
+placement=deterministic-fallback reason=modelIneligible
+title=Kyoto packing brief
+items=3
+=== NOT READY ===
+placement=deterministic-fallback reason=modelNotReady
+title=Kyoto packing brief
+items=3
+=== FRAMEWORK ABSENT ===
+placement=deterministic-fallback reason=modelUnavailable(frameworkNotPresent)
+title=Kyoto packing brief
+items=3

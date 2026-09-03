@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+DERIVED=${TMPDIR:-/tmp}/fieldnotes-companion-derived
+
+xcodebuild \
+    -project "$ROOT/FieldNotes/FieldNotes.xcodeproj" \
+    -scheme FieldNotes \
+    -sdk iphonesimulator \
+    -destination 'generic/platform=iOS Simulator' \
+    -derivedDataPath "$DERIVED" \
+    CODE_SIGNING_ALLOWED=NO \
+    build
